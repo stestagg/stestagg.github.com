@@ -1,0 +1,3 @@
+[submodule "Personal"]
+	path = Personal
+	url = https://github.com/stestagg/Personal.git
