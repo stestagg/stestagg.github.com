@@ -1,0 +1,73 @@
+<html>
+<head>
+	<title>Sierpinski</title>
+	<script src="jquery-1.8.2.min.js"></script>
+	<script src="sierp.js"></script>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="index.css" type="text/css" />
+    <link rel="stylesheet" href="scrollbar.css" type="text/css" />
+</head>
+<body>
+
+
+<div class="window main">
+    <div class="window_in">
+        <div class="titlebar">
+            <img src="controls.png" class="control"/>
+            Sierpinski Generator
+        </div>
+        <div class="body">
+            <div class="frame">
+                <div class="frame_in">
+                    <h2>Shape</h2>
+                    <button id="less"><div><span>-</span></div></button>
+                    <span id="sides">7</span> Sides
+                    <button id="more"><div><span>+</span></div></button>
+                    <button id="centre" class="checkbox"><div></div></button>
+                    <label for="centre">Add Centre point</label>
+                </div>
+            </div>
+
+            <div class="panel">
+                <canvas class="panel_in" id="sierp" width="400" height="400">
+                    A modern browser is required to view the Sierpinski generator
+                </canvas>
+                <div id="loading">Loading</div>
+            </div>
+
+            <div class="frame">
+                <div class="frame_in">
+                    <h2>Steps</h2>
+                    <button id="auto"><div><span>Auto</span></div></button>
+                    <button id="next"><div><span>Next</span></div></button> &nbsp;
+                    <button id="save"><div><span>Save</span></div></button> 
+                    <br/>
+                    Looks grainy/dotty?  Click <b>Auto</b> to improve the image
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="window results">
+    <div class="window_in">
+        <div class="titlebar">
+            <img src="controls.png" class="control"/>
+            Results
+        </div>
+        <div class="body">
+            <button disabled="disabled" id="reset_icons">
+                <div><span>Reset</span></div>
+            </button>
+            <div class="panel icon_list">
+                <div class="panel_in">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
