@@ -1,0 +1,155 @@
+<html>
+
+<title>Sort</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+
+<script src="zepto.js"></script>
+<script src="svg.js"></script>
+
+<script type="text/javascript" src="impl.js"></script>
+<script src="bubble.js"></script>
+<script src="bubble2.js"></script>
+<script src="bubble3.js"></script>
+<script src="cocktail.js"></script>
+<script src="cocktail2.js"></script>
+<script src="comb.js"></script>
+<script src="quicksort.js"></script>
+<script src="merge.js"></script>
+<script src="random.js"></script>
+<script src="select.js"></script>
+<script>
+
+  $(function() {
+    window.list = new List(500);
+    window.list_dirty = false;
+    var algos = $("#algos");
+
+    algos.change(function() {
+      var current_func = $("#algos").val();
+      var desc = sort_descriptions[current_func];
+      $("#desc_p").text(desc[0]);
+      $("#desc_a").attr("href", desc[1]).text(desc[1]);
+    })
+
+    for(sort_fun in sort_funcs) {
+      var option = $("<option/>");
+      if (sort_fun == "merge") { 
+        option.attr("selected", true); 
+      }
+      option.text(sort_fun);
+      algos.append(option)
+    }
+    algos.change();
+
+    function new_list() {
+      list.halt();
+      var existing = $("#graph");
+      var parent = existing.parent();
+      existing.remove();
+      parent.append('<svg id="graph"/>');
+
+      var items = parseInt($("#item_count").val());
+      var update_delay = parseInt($("#update_delay").val());
+      var group_updates = parseInt($("#group_updates").val());
+      list = new List(items, update_delay, group_updates);
+      list_dirty = false;
+    }
+
+    $("#start").click(function(e) {
+      new_list();
+      list_dirty = true;
+      var current_func = $("#algos").val();
+      list.sort(current_func);
+    })
+
+    $("#halt").click(function() {
+      list.halt();
+    })
+
+  })
+</script>
+
+<body>
+  <div class="window">
+    <div class="window_in">
+      <div class="titlebar">
+        <img src="controls.png" class="control"/>
+        Sort Visualizer
+      </div>
+      <div class="toolbar">
+        <span class="val" id="current_algo"></span> 
+        Compares: <span class="val" id="compares">0</span>.  
+        Swaps: <span class="val" id="swaps">0</span>.
+        Compares per Item: <span class="val" id="cpi">0</span>.  
+        Swaps per Item: <span class="val" id="spi">0</span>.
+      </div>
+      <div class="panel" >
+        <div class="panel_in" style="width: 768px; height: 400px;">
+          <svg id="graph" style="width: 768px; height: 400px; margin:0; padding:0;"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="window" style="width: 255px;">
+    <div class="window_in">
+      <div class="titlebar">
+        <img src="controls.png" class="control"/>
+        Parameters
+      </div>
+
+      <div class="frame">
+        <div class="frame_in">
+          <h2>Controls</h2>
+          <button id="start"><div><span>Start</span></div></button>
+          <button id="halt"><div><span>Halt</span></div></button>
+          <!--<button id="reset"><div><span>Reset</span></div></button>-->
+        </div>
+    </div>
+
+    <div class="frame">
+      <div class="frame_in">
+        <h2>Sort Algorithm</h2>
+        <span class="select_out" style="width: 100%">
+          <select id="algos" size=10 style="width: 100%;">
+          </select>
+        </span>
+      </div>
+    </div>
+
+    <div class="frame">
+      <div class="frame_in" style="text-align: left;">
+        <h2>Description</h2>
+        <a id="desc_a" target="_blank"></a>
+        <p id="desc_p"></p>
+      </div>
+    </div>
+
+    <div class="frame">
+      <div class="frame_in">
+        <h2>Options</h2>
+        <div>
+          <span class="label1">Items in list:</span>
+          <span class="textbox_out">
+            <input data-type="int" id="item_count" value="500">
+          </span>
+        </div>
+        <div>
+          <span class="label1">Update Delay:</span>
+          <span class="textbox_out">
+            <input data-type="int" id="update_delay" value="0">
+          </span>
+        </div>
+        <div>
+          <span class="label1">Group Updates:</span>
+          <span class="textbox_out">
+            <input data-type="int" id="group_updates" value="5">
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>
