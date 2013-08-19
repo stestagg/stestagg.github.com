@@ -1,4 +1,5 @@
-new_sort("bubble3", "Like bubble2, but also skips scanning the lower sections of the array, when they are known to be sorted",
+new_sort("bubble3", "Like bubble2, but also skips scanning the lower sections of the array, "+
+                    "when they are known to be sorted. Works better with 100 Items in list.",
   "http://en.wikipedia.org/wiki/Bubble_sort",
     function(list) {
 

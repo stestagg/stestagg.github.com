@@ -1,4 +1,5 @@
-new_sort("bubble2", "Traditional bubble sort, doesn't iterate over the right-hand sorted section every time",
+new_sort("bubble2", "Traditional bubble sort, doesn't iterate over the right-hand sorted section" +
+                    " every time. Works better with 100 Items in list.",
   "http://en.wikipedia.org/wiki/Bubble_sort",
 function(list) {
 

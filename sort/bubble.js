@@ -1,4 +1,6 @@
-new_sort("bubble", "Traditional bubble sort.  Compare items 0 and 1.  Swap them if out-of-order, Compare items 1 and 2, ... repeat until a full sweep happens with no swaps.",
+new_sort("bubble", "Traditional bubble sort.  Compare items 0 and 1.  Swap them if out-of-order, "
+                   + "Compare items 1 and 2, ... repeat until a full sweep happens with no swaps. "
+                   + "Works better with 100 Items in list.",
   "http://en.wikipedia.org/wiki/Bubble_sort",
   function(list) {
 
