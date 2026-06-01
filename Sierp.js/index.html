@@ -1,25 +1,12 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>Sierpinski</title>
-	<script src="jquery-1.8.2.min.js"></script>
-	<script src="sierp.js"></script>
-    <script src="index.js"></script>
+    <script type="module" src="index.js"></script>
     <link rel="stylesheet" href="index.css" type="text/css" />
     <link rel="stylesheet" href="scrollbar.css" type="text/css" />
-    <script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-310358-3']);
-  _gaq.push(['_setDomainName', 'stestagg.github.io']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-    </script>
 </head>
 <body>
 
@@ -32,13 +19,17 @@
         </div>
         <div class="body">
             <div class="frame">
-                <div class="frame_in">
+                <div class="frame_in toolbar">
                     <h2>Shape</h2>
-                    <button id="less"><div><span>-</span></div></button>
-                    <span id="sides">7</span> Sides
-                    <button id="more"><div><span>+</span></div></button>
-                    <button id="centre" class="checkbox"><div></div></button>
-                    <label for="centre">Add Centre point</label>
+                    <div class="button_group">
+                        <button id="less"><div><span>-</span></div></button>
+                        <span id="sides">7</span> Sides
+                        <button id="more"><div><span>+</span></div></button>
+                    </div>
+                    <div class="button_group">
+                        <button id="centre" class="checkbox"><div></div></button>
+                        <label for="centre">Add Centre point</label>
+                    </div>
                 </div>
             </div>
 
@@ -46,17 +37,17 @@
                 <canvas class="panel_in" id="sierp" width="400" height="400">
                     A modern browser is required to view the Sierpinski generator
                 </canvas>
-                <div id="loading">Loading</div>
+                <div id="loading" class="hidden">Loading</div>
             </div>
 
             <div class="frame">
                 <div class="frame_in">
                     <h2>Steps</h2>
-                    <button id="auto"><div><span>Auto</span></div></button>
-                    <button id="next"><div><span>Next</span></div></button> &nbsp;
-                    <button id="save"><div><span>Save</span></div></button> 
-                    <br/>
-                    Looks grainy/dotty?  Click <b>Auto</b> to improve the image
+                    <button id="auto"><div><span>Run</span></div></button>
+                    <button id="next"><div><span>Step 1</span></div></button>
+                    <button id="clear"><div><span>Clear</span></div></button> &nbsp;
+                    <button id="save"><div><span>Save</span></div></button>
+
                 </div>
             </div>
         </div>

@@ -1,128 +1,125 @@
-function Point(x, y) {
-	var self = this;
-	self.x = parseInt(x, 0);
-	self.y = parseInt(y, 0);
+class Point {
+  constructor(x, y) {
+    this.x = Math.trunc(x);
+    this.y = Math.trunc(y);
+  }
+
+  toIndex(width) {
+    return this.x + this.y * width;
+  }
+
+  approach(other) {
+    return new Point((this.x + other.x) / 2, (this.y + other.y) / 2);
+  }
 }
 
-Point.prototype.toIndex = function(w) { 
-	return parseInt(this.x + (this.y*w), 10); 
-};
+export class Sierp {
+  #width;
+  #height;
 
-Point.prototype.approach = function(other) {
-	return new Point(
-			(this.x + other.x) / 2,
-			(this.y + other.y) / 2
-			);
-};
+  constructor(width, height, step) {
+    this.#width = width;
+    this.#height = height;
+    this.max = 0;
+    this.step = step;
+    this.output = null;
+    this.points = [];
+  }
 
+  #xy(pointOrX, y) {
+    if (pointOrX instanceof Point) return pointOrX.toIndex(this.#width);
+    return pointOrX + y * this.#width;
+  }
 
-function Sierp(w, h, step) {
-	var self = this;
+  #pointAt(index) {
+    return new Point(index % this.#width, Math.trunc(index / this.#width));
+  }
 
-	self.width = w;
-	self.height = h;
-	self.max = 0;
-	self.step = step;
-	self.output = null;
-
-	self.points = [];
-
-	self.xy = function(x, y) {
-		if (x.toIndex) {	return x.toIndex(self.width); }
-		return parseInt(x + (y * self.width), 10);
-	}
-	self.getPoint = function(index) {
-		return new Point(index % self.width, index / self.width);
-	}
-
-	self.generation = function(from) {
-		var to = new Int16Array(self.width * self.height);
-		self.max=0;
-		var i = 0;
-		for (var i = 0; i < from.length; ++i) {
-			if (from[i] > 0) {
-				var pos = self.getPoint(i);
-				for (var p = 0; p < self.points.length; ++p) {
-					var point  = self.points[p];
-					var new_index = self.xy(pos.approach(point));
-					to[new_index] = Math.min(to[new_index] + from[i], 32767);
-					self.max = Math.max(self.max, to[new_index]);
-				}
-			}
-		};
-		return to;
-	}
-
-	self.set_points = function(sides) {
-		self.points = new Array();
-		var full_circle = 2.0*Math.PI;
-		var step_angle = full_circle/sides;
-		for (var i=0; i<sides; ++i) {
-			var angle =(-full_circle/4) + step_angle * i;
-			var new_x = 0.5 + Math.cos(angle) * 0.499;
-			var new_y = 0.5 + Math.sin(angle) * 0.499;
-			self.points.push(new Point(new_x * self.width,new_y * self.height));
-		}
-		self.reset();
-	};
-
-	self.reset = function() {
-		self.output = new Int16Array(self.width * self.height);
-		self.output[self.xy(self.width/2, self.height/2)] = self.step;
-	}
-
-	self.next = function() {
-		self.output = self.generation(self.output);
-	}
-
-    self.safe_next = function() {
-        var max = self.max;
-        var new_output = self.generation(self.output)
-        if (self.max >= 32767){
-            self.max = max;
-            return false;
-        }else{
-            self.output = new_output;
-            return true;
+  generation(from) {
+    const to = new Int16Array(this.#width * this.#height);
+    this.max = 0;
+    for (let i = 0; i < from.length; i++) {
+      if (from[i] > 0) {
+        const pos = this.#pointAt(i);
+        for (const point of this.points) {
+          const idx = this.#xy(pos.approach(point));
+          to[idx] = Math.min(to[idx] + from[i], 32767);
+          if (to[idx] > this.max) this.max = to[idx];
         }
+      }
     }
+    return to;
+  }
 
-	self.render = function(canvas) {
-		var ctx = canvas.getContext('2d');
-		var image = ctx.createImageData(self.width, self.height);
-		var factor = 255/self.max;
-		for (var i=0; i<self.output.length; i += 1) {
-			var basis = i * 4;
-			image.data[basis] = 0;
-			image.data[basis+1] = 0;
-			image.data[basis+2] = 0;
-			image.data[basis+3] = self.output[i] * factor;
-		}
-		ctx.putImageData(image, 0, 0);
-	}
-
-    self.drawPoints = function(canvas) {
-        var ctx = canvas.getContext('2d');
-        var wid = canvas.width;
-        var hei = canvas.height;
-        ctx.clearRect(0,0,wid,hei);
-        ctx.lineWidth = 0.3;
-        if (self.points.length == 0) return;
-        ctx.beginPath();
-        for (var i=0; i < self.points.length; ++i){
-            ctx.fillRect(
-                self.points[i].x - 2,
-                self.points[i].y - 2,
-                4,
-                4);
-            for (var j=(i+1); j < self.points.length; ++j){
-                ctx.moveTo(self.points[i].x, self.points[i].y);
-                ctx.lineTo(self.points[j].x, self.points[j].y);
-            }
-        }
-        ctx.closePath();
-        ctx.stroke();
+  set_points(sides) {
+    this.points = [];
+    const fullCircle = 2 * Math.PI;
+    const stepAngle = fullCircle / sides;
+    let minSin = Infinity, maxSin = -Infinity;
+    for (let i = 0; i < sides; i++) {
+      const s = Math.sin(-fullCircle / 4 + stepAngle * i);
+      if (s < minSin) minSin = s;
+      if (s > maxSin) maxSin = s;
     }
- 
+    const yCenter = 0.5 - (minSin + maxSin) * 0.499 / 2;
+    for (let i = 0; i < sides; i++) {
+      const angle = -fullCircle / 4 + stepAngle * i;
+      const nx = 0.5 + Math.cos(angle) * 0.499;
+      const ny = yCenter + Math.sin(angle) * 0.499;
+      this.points.push(new Point(nx * this.#width, ny * this.#height));
+    }
+    this.reset();
+  }
 
+  addCentrePoint() {
+    this.points.push(new Point(this.#width / 2, this.#height / 2));
+  }
+
+  reset() {
+    this.output = new Int16Array(this.#width * this.#height);
+    this.output[this.#xy(this.#width / 2, this.#height / 2)] = this.step;
+  }
+
+  next() {
+    this.output = this.generation(this.output);
+  }
+
+  safe_next() {
+    const prevMax = this.max;
+    const newOutput = this.generation(this.output);
+    if (this.max >= 32767) {
+      this.max = prevMax;
+      return false;
+    }
+    this.output = newOutput;
+    return true;
+  }
+
+  render(canvas) {
+    const ctx = canvas.getContext('2d');
+    const image = ctx.createImageData(this.#width, this.#height);
+    const factor = 255 / this.max;
+    for (let i = 0; i < this.output.length; i++) {
+      image.data[i * 4 + 3] = this.output[i] * factor;
+    }
+    ctx.putImageData(image, 0, 0);
+  }
+
+  drawPoints(canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 0.3;
+    if (this.points.length === 0) return;
+    ctx.beginPath();
+    for (let i = 0; i < this.points.length; i++) {
+      const { x, y } = this.points[i];
+      ctx.fillRect(x - 2, y - 2, 4, 4);
+      for (let j = i + 1; j < this.points.length; j++) {
+        ctx.moveTo(x, y);
+        ctx.lineTo(this.points[j].x, this.points[j].y);
+      }
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
 }

@@ -1,114 +1,140 @@
-var sides = 7;
-var has_centre = false;
-var sierp = new Sierp(400, 400, 1);
+import { Sierp } from './sierp.js';
 
-function onclick(){
-    startLoad();
-    window.setTimeout("run(1)", 10);
+const canvas = document.getElementById('sierp');
+const ctx = canvas.getContext('2d');
+const loading = document.getElementById('loading');
+const sidesSpan = document.getElementById('sides');
+const iconList = document.querySelector('.icon_list .panel_in');
+const resetIconsBtn = document.getElementById('reset_icons');
+
+const sierp = new Sierp(400, 400, 1);
+let sides = 7;
+let hasCentre = false;
+let autoRunning = false;
+
+function startLoad() {
+  loading.classList.remove('hidden');
+  document.querySelectorAll('.main button').forEach(b => { b.disabled = true; });
 }
 
-function auto(){
-    startLoad();
-    window.setTimeout("autorun()", 10);
+function stopLoad() {
+  loading.classList.add('hidden');
+  document.querySelectorAll('.main button').forEach(b => { b.disabled = false; });
 }
 
-function autorun(){
-    var did_stuff = sierp.safe_next();
-    sierp.render($("#sierp")[0]);
-    if (did_stuff){
-        window.setTimeout("autorun()", 100);
-    }else{
-        stopLoad();
-    }   
+function updatePoints() {
+  sierp.set_points(sides);
+  if (hasCentre) sierp.addCentrePoint();
+  sidesSpan.textContent = sides;
+  sierp.drawPoints(canvas);
 }
 
-function update_points(){
-    sierp.set_points(sides);
-    if (has_centre){
-        sierp.points.push(new Point(200, 200));
-    }
-    $("#sides").text(sides);
-    sierp.drawPoints($("#sierp")[0]);
+function clearShape() {
+  autoRunning = false;
+  stopLoad();
+  sierp.reset();
+  sierp.drawPoints(canvas);
 }
 
-function more(){
-    sides += 1;
-    update_points();
-}
-function less(){
-    sides -= 1;
-    if (sides < 2) sides=2;
-    update_points();
+function onStep() {
+  startLoad();
+  setTimeout(() => run(1), 10);
 }
 
-
-function startLoad(){
-    $("#loading").show();
-    $("button", ".main").attr("disabled", "disabled");
+function run(num) {
+  for (let i = 0; i < num; i++) sierp.next();
+  sierp.render(canvas);
+  stopLoad();
 }
 
-function stopLoad(){
-    $("#loading").fadeOut("fast");
-    $("button", ".main").attr("disabled", false);
-}
-
-function run(num){
-    for (var i=0; i<num; ++i){
-        sierp.next();
-    }
-    sierp.render($("#sierp")[0]);
-    $("button").removeAttr("disabled");
-    $("#loading").fadeOut("fast");
-}
-
-function result_click(){
-    $(".result").removeClass("active");
-    $(this).addClass("active");
-    var new_img = new Image();
-    new_img.src = $("img", this)[0].src;
-    var canvas = $("#sierp")[0];
-    var ctx = canvas.getContext("2d");
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(new_img, 0, 0, canvas.width, canvas.height);
-};
-
-function add_icon(data, name){
-    $("button", ".results").attr("disabled", false);
-    var result = $('<div class="result"><img src="" class="result_img"/>'
-                  +'<span class="sel"><span class="label"></span></span></div>');
-    $("img", result).attr("src", data); 
-    $("span.label", result).text(name);
-    result.click(result_click);
-    $(".icon_list .panel_in").append(result);
-    $(".icon_list .panel_in").scrollTop(result.position().top);
-};
-
-function reset_icons(){
-    $(".icon_list .panel_in").html("");
-    $(this).attr("disabled", "disabled");  
-};
-
-function save_result(){
-    var result_data = $("#sierp")[0].toDataURL();
-    add_icon(result_data, "Result");
-};
-
-function checkbox_click(){
-    $(this).toggleClass("checked");
-    has_centre = $(this).hasClass('checked');
-    update_points();
-}
-
-$(function(){
-    sierp.set_points(sides);
-    window.setTimeout("update_points()", 10);
+function autorun() {
+  if (!autoRunning) return;
+  if (sierp.safe_next()) {
+    sierp.render(canvas);
+    requestAnimationFrame(autorun);
+  } else {
+    autoRunning = false;
     stopLoad();
-    $("#next").click(onclick);
-    $("#reset_icons").click(reset_icons);
-    $("#save").click(save_result);
-    $("#less").click(less);
-    $("#auto").click(auto);
-    $("#more").click(more);
+  }
+}
 
-    $("button.checkbox").click(checkbox_click);
-});
+function startAuto() {
+  autoRunning = true;
+  startLoad();
+  setTimeout(() => requestAnimationFrame(autorun), 10);
+}
+
+function onResultClick(event) {
+  document.querySelectorAll('.result').forEach(r => r.classList.remove('active'));
+  const result = event.currentTarget;
+  result.classList.add('active');
+  const img = result.querySelector('img');
+  const newImg = new Image();
+  newImg.src = img.src;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(newImg, 0, 0, canvas.width, canvas.height);
+}
+
+function addIcon(data, name) {
+  resetIconsBtn.disabled = false;
+
+  const result = document.createElement('div');
+  result.className = 'result';
+
+  const img = document.createElement('img');
+  img.className = 'result_img';
+  img.src = data;
+
+  const sel = document.createElement('span');
+  sel.className = 'sel';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = name;
+  sel.appendChild(label);
+
+  result.appendChild(img);
+  result.appendChild(sel);
+  result.addEventListener('click', onResultClick);
+
+  iconList.appendChild(result);
+  iconList.scrollTop = result.offsetTop;
+}
+
+function resetIcons() {
+  iconList.innerHTML = '';
+  resetIconsBtn.disabled = true;
+}
+
+function saveResult() {
+  addIcon(canvas.toDataURL(), 'Result');
+}
+
+function onCentreClick(event) {
+  const btn = event.currentTarget;
+  btn.classList.toggle('checked');
+  hasCentre = btn.classList.contains('checked');
+  updatePoints();
+}
+
+function less() {
+  sides--;
+  if (sides < 2) sides = 2;
+  updatePoints();
+}
+
+function more() {
+  sides++;
+  updatePoints();
+}
+
+sierp.set_points(sides);
+setTimeout(updatePoints, 10);
+
+document.getElementById('next').addEventListener('click', onStep);
+document.getElementById('clear').addEventListener('click', clearShape);
+document.getElementById('reset_icons').addEventListener('click', resetIcons);
+document.getElementById('save').addEventListener('click', saveResult);
+document.getElementById('less').addEventListener('click', less);
+document.getElementById('auto').addEventListener('click', startAuto);
+document.getElementById('more').addEventListener('click', more);
+document.querySelector('button.checkbox').addEventListener('click', onCentreClick);
