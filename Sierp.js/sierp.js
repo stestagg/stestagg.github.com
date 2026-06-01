@@ -36,14 +36,14 @@ export class Sierp {
   }
 
   generation(from) {
-    const to = new Int16Array(this.#width * this.#height);
+    const to = new Uint32Array(this.#width * this.#height);
     this.max = 0;
     for (let i = 0; i < from.length; i++) {
       if (from[i] > 0) {
         const pos = this.#pointAt(i);
         for (const point of this.points) {
           const idx = this.#xy(pos.approach(point));
-          to[idx] = Math.min(to[idx] + from[i], 32767);
+          to[idx] = Math.min(to[idx] + from[i], 4294967295);
           if (to[idx] > this.max) this.max = to[idx];
         }
       }
@@ -87,7 +87,8 @@ export class Sierp {
   safe_next() {
     const prevMax = this.max;
     const newOutput = this.generation(this.output);
-    if (this.max >= 32767) {
+    console.log(this.max);
+    if (this.max >= 4294967295) {
       this.max = prevMax;
       return false;
     }

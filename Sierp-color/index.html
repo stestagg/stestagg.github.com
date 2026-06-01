@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>Sierpinski</title>
     <script type="module" src="index.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="index.css" type="text/css" />
-    <link rel="stylesheet" href="scrollbar.css" type="text/css" />
 </head>
 <body>
 
@@ -19,19 +21,8 @@
 
         <div class="textbox">
             <div class="in" style="max-height:300px;overflow-y: auto;">
-                <b>How to Use</b>
-                <p style="margin-left: 20px;">
-                    1. Pick the shape to explore, using the 'Sides' buttons at the top.  Selecting 'Add center point' adds an extra point in the center of the shape.<br/>
-                    2. Click 'Run' to start the process.  This stops automatically once one pixel becomes fully black.<br/>
-                    3. Click 'Step 1' to advance the process one step at a time.<br/>
-                    4. Click 'Clear' to reset the image, and 'Save' to store the current image in the results list on the right.  (right-click on an image to download/save it)<br/>
-                </p>
-                <b>Why does the UI look all old-school?</b>
-                <p>
-                    Sometimes I have a sense of whimsy, and part of the challenge of this toy was to create (in 2010) a UI that accurately captured the look and feel of the windows 2000 user interface.
-                    Since that time, this task has become much easier thanks to improvements in CSS.
-                </p>
                 <b>What is this all about?</b>
+                
                 <p>
                     The <a href="https://en.wikipedia.org/wiki/Sierpinski_triangle" target="_blank">Sierpinski triangle</a> is a fractal shape,
                     typically created by recursively subdividing an equilateral triangle into smaller triangles.
@@ -64,7 +55,6 @@
                 <p>
                     The issue is that all of the corners are treading on each other's paths, so you can see structure, but everything is too harsh/contrasty.  The obvious fix is to make each 
                     step have less impact.  Rather than flip a 0 (white) to a 1 (black), we just make the value a little bit darker.
-                    Luckily, this change fits our approach nicely, because not only do images support multiple shades of grey! but the algorithm just generalizes to 'sum up the contributions' with each step adding a small value, rather than union over bits.
                 </p>
                 <p>
                     This means the visualization changes from 'did we visit this point?' to 'how frequently was this point visited?' and the result shows much more interesting structure:
@@ -103,7 +93,7 @@
                         <canvas class="panel_in" id="sierp" width="400" height="400">
                             A modern browser is required to view the Sierpinski generator
                         </canvas>
-                        <div id="loading" class="hidden">Loading</div>
+                        <div id="loading" class="hidden">Processing</div>
                     </div>
 
                     <div class="frame">

@@ -1,0 +1,395 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root {
+  --bg: #d8e2ec;
+  --panel: #ffffff;
+  --panel-alt: #eef4fa;
+  --border: #0077cc;
+  --border-dim: #a8c8e8;
+  --text: #1a3550;
+  --text-bright: #0a1e32;
+  --text-dim: #6488a8;
+  --disabled-text: #aabccc;
+  --glow: 0 0 8px rgba(0, 119, 204, 0.3);
+  --glow-strong: 0 0 14px rgba(0, 119, 204, 0.55), 0 0 28px rgba(0, 119, 204, 0.18);
+}
+
+body {
+  color: var(--text);
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 10px 40px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 119, 204, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 119, 204, 0.07) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.side-by-side {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ── Panels ── */
+
+.panel {
+  display: inline-block;
+  border: 1px solid var(--border-dim);
+  position: relative;
+}
+
+.panel_in {
+  display: block;
+  background: #ffffff;
+}
+
+.icon_list .panel_in {
+  background: var(--panel-alt);
+}
+
+/* ── Windows ── */
+
+.window {
+  position: relative;
+  vertical-align: top;
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border-dim);
+  box-shadow: 0 2px 16px rgba(0, 119, 204, 0.1);
+}
+
+.window_in {
+  padding: 1px;
+}
+
+.body {
+  padding: 8px;
+}
+
+/* ── Titlebar ── */
+
+.titlebar {
+  min-width: 150px;
+  min-height: 16px;
+  text-align: left;
+  padding: 6px 12px;
+  background: var(--panel-alt);
+  color: var(--border);
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.titlebar::before {
+  content: '//';
+  color: var(--border-dim);
+  flex-shrink: 0;
+}
+
+.titlebar .control {
+  display: none;
+}
+
+/* ── Frames ── */
+
+.frame {
+  margin-top: 16px;
+}
+
+.frame_in {
+  position: relative;
+  border-top: 1px solid var(--border-dim);
+  padding: 12px 6px 6px;
+}
+
+.frame_in h2 {
+  position: static;
+  display: block;
+  font-size: 10px;
+  font-weight: normal;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 0 8px;
+}
+
+/* ── Buttons ── */
+
+button,
+button[disabled] {
+  display: inline-block;
+  outline: none;
+  padding: 0;
+  background: var(--panel);
+  border: 1px solid var(--border-dim);
+  color: var(--text);
+  cursor: pointer;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  transition: border-color 0.15s, box-shadow 0.15s, color 0.15s, background 0.15s;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+button div {
+  padding: 2px;
+  display: inline-block;
+}
+
+button span {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button:hover {
+  border-color: var(--border);
+  color: var(--border);
+  box-shadow: var(--glow);
+  text-decoration: none;
+}
+
+button:active {
+  background: var(--panel-alt);
+  border-color: var(--border);
+  box-shadow: var(--glow-strong);
+}
+
+button:focus span {
+  border-color: var(--border-dim);
+}
+
+button:disabled,
+button[disabled] {
+  color: var(--disabled-text);
+  border-color: #d4e0ea;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ── Checkbox button ── */
+
+button.checkbox,
+button.checkbox[disabled] {
+  vertical-align: middle;
+  margin-bottom: 4px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  background: var(--panel);
+}
+
+button.checkbox div {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  margin: 3px;
+  border: 1px solid var(--border-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.checkbox.checked div::after {
+  content: '✓';
+  color: var(--border);
+  font-size: 9px;
+  line-height: 1;
+}
+
+button.checkbox:hover div {
+  border-color: var(--border);
+}
+
+/* ── Loading indicator ── */
+
+#loading {
+  background: rgba(238, 244, 250, 0.95);
+  color: var(--border);
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  width: 160px;
+  height: 30px;
+  border: 1px solid var(--border);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(0, 119, 204, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(0, 119, 204, 0.7), 0 0 32px rgba(0, 119, 204, 0.25); }
+}
+
+#loading.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Results ── */
+
+.window.results {
+  margin-left: 0;
+}
+
+.icon_list {
+  display: block;
+  margin-top: 4px;
+}
+
+.icon_list .panel_in {
+  min-height: 200px;
+  max-height: 460px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 4px;
+}
+
+.result {
+  margin-bottom: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.result span.sel {
+  display: inline-block;
+  margin-top: 2px;
+  border: 1px solid var(--border-dim);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.result:hover span.sel {
+  border-color: var(--border);
+  box-shadow: var(--glow);
+}
+
+.result span.label {
+  display: block;
+  padding: 2px 5px;
+  color: var(--text-dim);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.result.active span.sel {
+  border: 1px solid var(--border);
+  box-shadow: var(--glow);
+}
+
+.result.active span.label {
+  color: var(--border);
+}
+
+.result img {
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: auto;
+}
+
+/* ── About / Textbox ── */
+
+.window.desc {
+  max-width: 800px;
+}
+
+.textbox {
+  border: 1px solid var(--border-dim);
+  padding: 0;
+  background: var(--panel);
+  margin-top: 8px;
+}
+
+.textbox > .in {
+  text-align: left;
+  padding: 12px 14px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.textbox > .in a {
+  color: var(--border);
+  text-decoration: none;
+}
+
+.textbox > .in a:hover {
+  text-decoration: underline;
+}
+
+.textbox > .in b {
+  color: var(--text-bright);
+}
+
+.textbox img {
+  border: 1px solid var(--border-dim);
+}
+
+/* ── Sides counter ── */
+
+#sides {
+  color: var(--border);
+  font-weight: normal;
+  min-width: 22px;
+  display: inline-block;
+  text-align: center;
+}
+
+/* ── Toolbar ── */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.button_group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+label {
+  color: var(--text);
+}
+
+.space {
+  margin: 10px;
+}

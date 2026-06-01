@@ -1,8 +1,8 @@
 :root {
-  --bg: #d6d3ce;
+  --bg: #D4D0C8;
   --border-dark: #404040;
   --border-mid: #808080;
-  --border-light: #dfdfdf;
+  --border-light: #D4D0C8;
   --disabled-color: #868a8e;
   --accent: #000080;
 }
@@ -13,6 +13,18 @@ body {
     font-family: tahoma, verdana, sans-serif;
     font-size: 11px;
     background: #21559c;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.side-by-side {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .panel {
@@ -254,6 +266,26 @@ button:hover {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+.window.desc{
+    max-width: 800px;
+}
+
+.textbox {
+    border: 1px solid var(--border-mid);
+    border-right-color: white;
+    border-bottom-color: white;
+    padding: 0;
+    background: white;
+    margin-top: 5px;
+}
+.textbox>.in {
+    text-align: left;
+    border: 1px solid var(--border-dark);
+    border-right-color: var(--border-light);
+    border-bottom-color: var(--border-light);
+    padding: 2px;
 }
 
 #sides {
